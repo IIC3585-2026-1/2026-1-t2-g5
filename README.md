@@ -39,3 +39,13 @@ npm run demo
 ```
 
 Después abres lo que te diga la consola, casi siempre es localhost en el puerto 5173.
+
+## Uso de IA
+
+Se utilizó IA como apoyo en:
+
+- La generación de la interfaz de la demo (HTML, CSS y parte de app.js)
+- La configuración de archivos de build (build.mjs, entry.cjs)
+- Sugerencias para la simulación de endpoints y manejo de cache
+
+Estas herramientas se usaron como apoyo, principalmente para características extras que aportaban valor al proyecto, pero no eran necesarias en lo pedido para la entrega, sin embargo, la implementación de las funciones del motor de consultas fue realizada manualmente, mientras que el testing asociado contó con apoyo de IA.
