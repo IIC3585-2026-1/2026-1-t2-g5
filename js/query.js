@@ -3,6 +3,7 @@ const createSelectOperation = require("./select");
 const createWhereOperation = require("./where");
 const createOrderByOperation = require("./orderBy");
 const createGroupByOperation = require("./groupBy");
+const createAggregateOperation = require("./aggregate");
 
 // Se valida el dataset y si está correcto se hace una copia
 const validateDataset = (data) => {
@@ -17,7 +18,7 @@ const validateDataset = (data) => {
 const executeOperations = (dataset, operations) =>
   operations.reduce((currentDataset, operation) => operation(currentDataset), dataset);
 
-// Función que acumula las operaciones de select, where, orderby, groupby y ejecuta.
+// Función que acumula las operaciones de select, where, orderby, groupby, aggregate y ejecuta.
 const buildQuery = (sourceData, operations = []) =>
   Object.freeze({
     select(fields) {
@@ -45,6 +46,13 @@ const buildQuery = (sourceData, operations = []) =>
       return buildQuery(
         sourceData,
         operations.concat(createGroupByOperation(field))
+      );
+    },
+
+    aggregate(aggregations) {
+      return buildQuery(
+        sourceData,
+        operations.concat(createAggregateOperation(aggregations))
       );
     },
 
