@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Motor de consultas — demo</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <p class="eyebrow">WEB Avanzada · demo didáctica</p>
+      <h1>Motor de consultas en memoria</h1>
+      <p class="lede">
+        Pipeline funcional inspirado en SQL: <code>query</code> → <code>where</code> →
+        <code>select</code> → <code>orderBy</code> → <code>groupBy</code> →
+        <code>aggregate</code> → <code>execute</code>.
+      </p>
+    </header>
+
+    <main class="layout">
+      <section class="panel panel--controls" aria-labelledby="dataset-heading">
+        <h2 id="dataset-heading">Dataset</h2>
+        <div class="row">
+          <label for="dataset">JSON</label>
+          <select id="dataset" name="dataset">
+            <option value="users">users.json</option>
+            <option value="transactions">transactions.json</option>
+          </select>
+        </div>
+        <p class="hint" id="dataset-meta"></p>
+      </section>
+
+      <section class="panel" aria-labelledby="examples-heading">
+        <h2 id="examples-heading">Consultas de ejemplo</h2>
+        <p class="hint">
+          Cada ejemplo muestra el encadenamiento y el resultado. El código corre en el
+          navegador usando el mismo módulo <code>query</code> del proyecto.
+        </p>
+        <div id="example-buttons" class="example-grid"></div>
+      </section>
+
+      <section class="panel panel--code" aria-labelledby="pipeline-heading">
+        <h2 id="pipeline-heading">Pipeline</h2>
+        <pre id="pipeline-view" class="code-block" tabindex="0">Seleccioná un ejemplo.</pre>
+      </section>
+
+      <section class="panel panel--result" aria-labelledby="result-heading">
+        <h2 id="result-heading">Resultado</h2>
+        <p id="error" class="error" hidden></p>
+        <div id="result" class="result-area"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>
+        Para generar el bundle: <code>npm install</code> y luego
+        <code>npm run build:demo</code>. Para servir:
+        <code>npm run demo</code>.
+      </p>
+    </footer>
+
+    <script src="./query-demo.js" defer></script>
+    <script src="./app.js" defer></script>
+  </body>
+</html>
