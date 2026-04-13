@@ -24,7 +24,7 @@ async function loadDataset(key) {
 function getQuery() {
   if (typeof window.QueryDemo === "undefined" || !window.QueryDemo.query) {
     throw new Error(
-      "Falta query-demo.js. En la raíz del repo ejecutá: npm install && npm run build:demo"
+      "Falta query-demo.js. En la raíz del repo ejecuta: npm install && npm run build:demo"
     );
   }
   return window.QueryDemo.query;

@@ -1,39 +1,41 @@
 # Tarea-2-Web-Avanzado
 
-Motor de consultas en memoria sobre arreglos de objetos, con API encadenada (estilo pipeline) inspirada en SQL.
+Hicimos un motor chico que le pegas a un arreglo de objetos en JSON y vas encadenando cosas parecidas a SQL: filtrar, elegir columnas, ordenar, agrupar y después resumir con aggregate. Al final llamas execute y te devuelve el resultado.
 
-## Cómo se cumplió la tarea (directo)
+El código está en la carpeta js, partido en un archivo por operación, y query.js junta todo y va guardando los pasos hasta que ejecutas.
 
-| Lo pedido | Qué hicimos |
-|-----------|-------------|
-| **`query(data)`** | Punto de entrada en `js/query.js`. Recibe un arreglo; si no lo es, lanza error. Hace copia superficial del arreglo (`slice`) para no reutilizar la misma referencia. |
-| **No modificar el dataset original** | Las operaciones devuelven datos nuevos (por ejemplo `map`, `filter`, `slice` + `sort`, `reduce` con objetos nuevos). Los tests comprueban que el JSON de entrada no cambia. |
-| **`select(fields)`** | `js/select.js`: valida arreglo de strings y proyecta cada fila con `map` + `reduce` (objetos nuevos). |
-| **`where(predicateFn)`** | `js/where.js`: valida que sea función y aplica `filter`. |
-| **`orderBy(field, 'asc' \| 'desc')`** | `js/orderBy.js`: valida campo y dirección; ordena una copia del arreglo (`slice` + `sort`). |
-| **`groupBy(field)`** | `js/groupBy.js`: devuelve un objeto `{ claveGrupo: [filas…] }` armado con `reduce` e inmutabilidad (spread + `concat`). |
-| **`aggregate(aggregations)`** | `js/aggregate.js`: recibe un objeto cuyos valores son funciones; cada una recibe el arreglo del grupo. Espera la salida de `groupBy`. Devuelve un arreglo de filas con `groupKey` y las métricas pedidas. |
-| **`execute()`** | En `js/query.js`: recorre la lista de operaciones acumuladas con `reduce` y devuelve el resultado final. |
-| **Programación funcional** | Sin clases ni bucles `for`/`while` en el motor. Se usan `map`, `filter`, `reduce`, funciones puras por operación y composición vía encadenamiento + `reduce` al ejecutar. |
+Qué hace cada parte:
 
-Archivos del motor: carpeta **`js/`**. Punto de exportación: **`js/index.js`**.
+query recibe el arreglo de datos y arranca la cadena. Hace una copia del arreglo para no tocar el original.
 
-## Cómo correr los tests
+where recibe una función y se queda solo con las filas donde esa función da verdadero, como un filtro.
 
-```bash
+select recibe una lista de nombres de campos y devuelve objetos nuevos solo con esas propiedades.
+
+orderBy ordena por un campo, ascendente o descendente.
+
+groupBy agrupa por un campo. El resultado pasa a ser un objeto donde cada clave es un valor del campo y el valor es la lista de filas de ese grupo.
+
+aggregate va después de groupBy. Le pasas un objeto donde cada clave es el nombre de un resultado y cada valor es una función que recibe las filas de un grupo y devuelve un número o lo que quieras calcular. Al final obtienes una lista de resúmenes, una fila por grupo.
+
+execute es el que de verdad corre todo lo que encadenaste y te devuelve el resultado.
+
+Tratamos de no romper los datos de entrada: en general devolvemos cosas nuevas y usamos map, filter y reduce en vez de for o while. No usamos clases.
+
+Los datos de prueba están en data. Para probar:
+
+```
 node --test
 ```
 
-(O `npm test` si usás el `package.json` del repo.)
+Si tienes npm instalado también puedes usar npm test.
 
-## Demo web (opcional, solo para mostrar)
+La carpeta demo es solo una pantalla simple para mostrar en la presentación hecha con IA, no era obligatoria. Para verla:
 
-No forma parte de los requisitos de la tarea; sirve para ver consultas sobre los JSON de `data/`.
-
-```bash
+```
 npm install
 npm run build:demo
 npm run demo
 ```
 
-Abrí la URL que indique `serve` (por defecto http://localhost:5173). El build copia `data/*.json` a `demo/public/data/` y genera el bundle `demo/public/query-demo.js`.
+Después abres lo que te diga la consola, casi siempre es localhost en el puerto 5173.
