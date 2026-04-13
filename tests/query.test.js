@@ -63,6 +63,35 @@ test("query(data).groupBy(...).execute() retorna estructura agrupada", () => {
   );
 });
 
+test("query(data).where(...).groupBy(...).aggregate(...).execute() resume por grupo", () => {
+  const users = [
+    { name: "Ana", country: "Chile", city: "Santiago", age: 30 },
+    { name: "Luis", country: "Peru", city: "Lima", age: 35 },
+    { name: "Carla", country: "Chile", city: "Santiago", age: 34 },
+    { name: "Pedro", country: "Chile", city: "Valparaiso", age: 28 },
+  ];
+
+  const average = (numbers) =>
+    numbers.reduce((sum, n) => sum + n, 0) / numbers.length;
+
+  const result = query(users)
+    .where((u) => u.country === "Chile")
+    .groupBy("city")
+    .aggregate({
+      count: (items) => items.length,
+      avgAge: (items) => average(items.map((x) => x.age)),
+    })
+    .execute();
+
+  assert.deepEqual(
+    result.sort((a, b) => a.groupKey.localeCompare(b.groupKey)),
+    [
+      { groupKey: "Santiago", count: 2, avgAge: 32 },
+      { groupKey: "Valparaiso", count: 1, avgAge: 28 },
+    ]
+  );
+});
+
 test("execute() sin operaciones retorna una copia del dataset", () => {
   const users = [{ id: 1, name: "Ana" }];
 
@@ -87,4 +116,14 @@ test("query(...) mantiene inmutabilidad del dataset original", () => {
 test("query(...).orderBy(...) y query(...).groupBy(...) validan parametros invalidos", () => {
   assert.throws(() => query([{ id: 1 }]).orderBy("id", "up"), TypeError);
   assert.throws(() => query([{ id: 1 }]).groupBy(""), TypeError);
+});
+
+test("query(...).aggregate(...) sin groupBy previo lanza TypeError", () => {
+  assert.throws(
+    () =>
+      query([{ id: 1 }])
+        .aggregate({ count: (items) => items.length })
+        .execute(),
+    TypeError
+  );
 });
